@@ -1,7 +1,58 @@
 import React from 'react';
+import { Field, reduxForm } from 'redux-form';
 
-const StreamCreate = () => {
-    return <div>StreamCreate</div>;
+class StreamCreate extends React.Component{
+    renderError = (meta) => {
+        if(meta.touched && meta.error) {
+            return (
+                <div className="ui error message">
+                    <div className="header">{meta.error}</div>
+                </div>
+            );
+        }
+    }
+
+    renderInput = (formProps) => {
+        const className = `field ${formProps.meta.error && formProps.meta.touched ? 'error' : ''}`;
+        return (
+                <div className={className}>
+                <label>{formProps.label}</label>
+                    <input {...formProps.input} autoComplete="off" />
+                    <div>{this.renderError(formProps.meta)}</div>
+                </div>
+        );
+    }
+
+    onSubmit(formValues) {
+        console.log(formValues);
+    }
+
+    render() {
+        return (
+            <form className="ui form error" onSubmit={this.props.handleSubmit(this.onSubmit)}>
+                <Field name="title" label="Enter Title" component={this.renderInput}/>
+                <Field name="description" label="Enter Description" component={this.renderInput}/>
+                <button className="ui button primary">Submit</button>
+            </form>
+        );
+    }
+}
+
+const validate = (formValues) => {
+    const errors = {};
+
+    if(!formValues.title) {
+        errors.title = 'You must enter a title';
+    }
+
+    if(!formValues.description) {
+        errors.description = 'You must enter a description';
+    }
+
+    return errors;
 };
 
-export default StreamCreate;
+export default reduxForm({
+    form: 'streamCreate',
+    validate: validate
+})(StreamCreate);
