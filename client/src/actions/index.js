@@ -60,9 +60,12 @@ export const editStream = (id, formValues) => {
 
 export const deleteStream = (id) => {
     return async (dispatch) => {
-        await streams.delete(`/streams/${id}`);
+        console.log('tuk');
+        const resp = await streams.delete(`/streams/${id}`);
+        console.log(resp);
 
         dispatch({ type: DELETE_STREAM, payload: id });
+        history.push('/');
     };
 };
 
